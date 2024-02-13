@@ -7,17 +7,17 @@ from .user import User
 from django.db import models
 
 # Create your models here.
-class OTPChoices(models.IntegerChoices):
-    VERIFY = 1
-    RESET = 2
-    ACTIVATE = 3
-
-
-class VerifyChoices(models.IntegerChoices):
-    EMAIL = 1
-
-
 class OTP:
+    class OTPChoices(models.IntegerChoices):
+        VERIFY = 1
+        RESET = 2
+        ACTIVATE = 3
+
+
+    class VerifyChoices(models.IntegerChoices):
+        EMAIL = 1
+
+
     stop_signal = False
     is_dashboard = False
     otp_type : int
@@ -32,8 +32,8 @@ class OTP:
         return self.user
 
     def __init__(self, *args: Any, username=None, email=None, **kwargs: Any) -> None:
-        kwargs.setdefault('otp_type', OTPChoices.ACTIVATE)
-        kwargs.setdefault('verify_type', VerifyChoices.EMAIL)
+        kwargs.setdefault('otp_type', self.__class__.OTPChoices.ACTIVATE)
+        kwargs.setdefault('verify_type', self.__class__.VerifyChoices.EMAIL)
 
         self.username = username
         self.email = email
