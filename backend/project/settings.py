@@ -39,7 +39,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-USER_AUTH_MODEL = 'user.User'
+AUTH_USER_MODEL = 'user.User'
 
 # Application definition
 THIRD_PARTY_APPS = [
@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+] + APPS + THIRD_PARTY_APPS
 
 
 CORS_ALLOW_ALL_ORIGINS = True

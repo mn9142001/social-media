@@ -47,7 +47,6 @@ class JWTLoginSerializer(CustomTokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         update_last_login(None, self.user)
-        data['user'] = UserLoggedInSerializer(self.user).data
         return data
 
 
@@ -70,7 +69,7 @@ class SignUpSerializer(serializers.ModelSerializer):
             raise ValidationError("username already exists", code="unique")
 
     def to_representation(self, instance):
-        data = super().to_representation(instance)
+        data = {}
         refresh_token = CustomTokenObtainPairSerializer.get_token(user=instance)
         data["refresh"] = str(refresh_token)
         data["access"] = str(refresh_token.access_token)
@@ -163,7 +162,6 @@ class PasswordChangeSerializer(UpdatePasswordMixin):
     def validate_old_password(self, value):
         self.instance : User = self.context['request'].user
         if not self.instance.check_password(value):
-            raise ValidationError("The two password fields didn’t match.", "invalid_passwords")
+            raise ValidationError("The two password fields did not match.", "invalid_passwords")
         return value
-    
-    
+

@@ -1,6 +1,5 @@
 from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.db import connection
 from rest_framework_simplejwt.tokens import RefreshToken as RT
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer as TRS
 from user.models import User
@@ -64,8 +63,5 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
-        # Add custom claims
-        token['schema_name'] = connection.schema_name
 
         return token

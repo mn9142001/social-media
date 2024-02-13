@@ -1,5 +1,5 @@
-from .auth import SignUpSerializer, JWTLoginSerializer, PasswordSendResetSerializer, UserLoggedInSerializer, PasswordChangeSerializer, CustomTokenObtainPairSerializer, PasswordResetVerifySerializer, DashboardLoginSerializer, RefreshSerializer
-from .user import UserLoggedInSerializer, UserListSerializer, CustomerDisplaySerializer, UserUpdateSerializer, UserSerializer, UserDetailedSerializer
+from .auth import SignUpSerializer, JWTLoginSerializer, PasswordSendResetSerializer, UserLoggedInSerializer, PasswordChangeSerializer, CustomTokenObtainPairSerializer, PasswordResetVerifySerializer, RefreshSerializer
+from .user import UserLoggedInSerializer, UserListSerializer, UserUpdateSerializer
 from .utils import PromoteUserPermissionSerializer, ActivateUserSerializer
-from .profile import UserProfileSerializer, ShipmentSerializer, DashboardShipmentSerializer, OverViewShipmentSerializer, GuestShipmentSerializer, OrderShipmentDetailedSerializer
+from .profile import UserProfileSerializer
 from .verify import SendEmailVerifyOTPSerializer, EmailChangeSerializer, SendUserEmailVerifyOTPSerializer, VerifyOtpUsernameSerializer
