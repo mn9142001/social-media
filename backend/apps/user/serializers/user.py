@@ -14,19 +14,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name', 'avatar')        
 
 
-class UserLoggedInSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('id', 'first_name', 'last_name', 'username', 'email', 'avatar', 'is_active')
-
-
-class UserListSerializer(UserLoggedInSerializer):
-    
-    class Meta(UserLoggedInSerializer.Meta):
-        fields = UserLoggedInSerializer.Meta.fields + ('is_active', 'is_staff')
-
-
 class UserDisplaySerializer(serializers.ModelSerializer):
     
     class Meta:

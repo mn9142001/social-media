@@ -19,7 +19,6 @@ class OTP:
 
 
     stop_signal = False
-    is_dashboard = False
     otp_type : int
     verify_type : int
     user : Optional[int | User]

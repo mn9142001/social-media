@@ -28,6 +28,10 @@ class PasswordChangeView(UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+    
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = False
+        return super().update(request, *args, **kwargs)
 
 
 class PasswordResetSendView(CreateAPIView):

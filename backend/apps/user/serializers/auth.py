@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from .user import UserLoggedInSerializer
 from user.tokens import CustomTokenObtainPairSerializer, RefreshToken
 from rest_framework.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
@@ -13,33 +12,6 @@ from rest_framework_simplejwt.settings import api_settings
 
 class RefreshSerializer(TokenRefreshSerializer):
     token_class = RefreshToken
-
-    def validate(self, attrs):
-        user = self.context['request'].user 
-        
-        user = user if user.is_authenticated else None
-
-        refresh = self.token_class(attrs["refresh"], user=user)
-
-        data = {"access": str(refresh.access_token)}
-
-        if api_settings.ROTATE_REFRESH_TOKENS:
-            if api_settings.BLACKLIST_AFTER_ROTATION:
-                try:
-                    # Attempt to blacklist the given refresh token
-                    refresh.blacklist()
-                except AttributeError:
-                    # If blacklist app not installed, `blacklist` method will
-                    # not be present
-                    pass
-
-            refresh.set_jti()
-            refresh.set_exp()
-            refresh.set_iat()
-
-            data["refresh"] = str(refresh)
-
-        return data
 
 
 class JWTLoginSerializer(CustomTokenObtainPairSerializer):
@@ -98,7 +70,6 @@ class PasswordSendResetSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         otp = OTP(**validated_data)
-        otp.is_dashboard = self.context.get('is_dashboard', False)
         otp.save()
         return otp
 
@@ -161,7 +132,10 @@ class PasswordChangeSerializer(UpdatePasswordMixin):
 
     def validate_old_password(self, value):
         self.instance : User = self.context['request'].user
+        self.instance.refresh_from_db(fields=['password'])
+
         if not self.instance.check_password(value):
             raise ValidationError("The two password fields did not match.", "invalid_passwords")
+
         return value
 

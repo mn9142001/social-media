@@ -11,9 +11,10 @@ def user_avatar_handler(instance, filename):
     return f"users/{instance.email}/avatars/{filename}"
 
 class User(TokenMixin, AbstractUser):
-    random_id = models.IntegerField(default=generate_random_id)
+    last_update = models.DateTimeField(default=timezone.now)
     last_password_change = models.DateTimeField(default=timezone.now)
     avatar = models.ImageField(upload_to=user_avatar_handler)
+    changing_password = False
 
     @property
     def avatar_url(self):
@@ -26,9 +27,18 @@ class User(TokenMixin, AbstractUser):
         self.is_from_token = is_from_token
 
     def save(self, *args, **kwargs):
-        self.random_id = generate_random_id()
-        if not kwargs.get('update_fields') == ['last_login']:
 
-            self.update_cache_random_id()
-        
+        if not kwargs.get('update_fields', None) == ['last_login']:
+            self.last_update = timezone.now()
+            str(self.last_update)
+            self.update_cache_field("last_update", refresh_from_db=False)
+
+        if self.changing_password:
+            self.last_password_change = timezone.now()
+            self.update_cache_field("last_password_change", refresh_from_db=False)
+
         return super().save(*args, **kwargs)
+
+    def set_password(self, raw_password: str | None) -> None:
+        self.changing_password = True
+        return super().set_password(raw_password)
